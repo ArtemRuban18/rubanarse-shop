@@ -1,19 +1,34 @@
-from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
-from .models import Product, Category, ProductReview
+from .models import Product, Category, ProductReview, TypeFlavor
 from django.core.paginator import Paginator
+from django.core.cache import cache
+from .forms import SearchForm
 
-# Create your views here.
 def home(request):
-    products = Product.objects.all()
+    products = cache.get('product_list')
+    if not products:
+        products = Product.objects.all()
+        cache.set('product_list', products, timeout = 60*20)
     categories = Category.objects.all()
     paginator = Paginator(products, 25)
     page_number = request.GET.get('page')
     page_products = paginator.get_page(page_number)
+    query = ""
+    if request.method == 'POST':
+        search_form = SearchForm(request.GET)
+        query = search_form.cleaned_data['query']
+        result_search = []
+        if search_form.is_valid():
+            result_search = (Product.objects.filter(name__icontains = query))
+            return redirect(request, "result_search.html", result_search)
+        else:
+            search_form = SearchForm()
     context = {
         'products':products,
         'categories':categories,
         'page_products':page_products,
+        'search_form':search_form,
+        'query':query,
     }
     return render(request, "home.html", context)
 
@@ -28,7 +43,10 @@ def detail_product(request, slug):
 
 def product_category(request, slug):
     category = get_list_or_404(Category, slug = slug)
-    products = Product.objects.filter(category = category)
+    products = cache.get('product_category')
+    if not products:
+        products = Product.objects.filter(category = category)
+        cache.set(products, 'product_category', timeout=60*20)
     categories = Category.objects.all()
     paginator = Paginator(products, 25)
     page_number = request.GET.get('page')
