@@ -1,7 +1,8 @@
-from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, PasswordResetForm
 from django.contrib.auth.models import User
 from django import forms
 from django.core.exceptions import ValidationError
+from django.conf import settings
 
 class SignUp(UserCreationForm):
     class Meta:
@@ -26,3 +27,13 @@ class CustomPasswordChangeForm(PasswordChangeForm):
         self.fields['old_password'].widget = forms.PasswordInput(attrs={"class": "form-control"})
         self.fields['new_password1'].widget = forms.PasswordInput(attrs={"class": "form-control"})
         self.fields['new_password2'].widget = forms.PasswordInput(attrs={"class": "form-control"})
+
+class CustomPasswordResetForm(PasswordResetForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['email'].widget = forms.EmailInput(attrs={"autocomplete": "email"})
+    
+    def send_mail(self, subject_template_name, email_template_name, context, from_email, to_email, html_email_template_name=None):
+        context['domain'] = settings.DEFAULT_DOMAIN
+        context['protocol'] = settings.DEFAULT_PROTOCOL
+        super().send_mail(subject_template_name, email_template_name, context, from_email, to_email, html_email_template_name)
