@@ -13,22 +13,11 @@ def home(request):
     paginator = Paginator(products, 25)
     page_number = request.GET.get('page')
     page_products = paginator.get_page(page_number)
-    query = ""
-    if request.method == 'POST':
-        search_form = SearchForm(request.GET)
-        query = search_form.cleaned_data['query']
-        result_search = []
-        if search_form.is_valid():
-            result_search = (Product.objects.filter(name__icontains = query))
-            return redirect(request, "result_search.html", result_search)
-        else:
-            search_form = SearchForm()
     context = {
         'products':products,
         'categories':categories,
         'page_products':page_products,
-        'search_form':search_form,
-        'query':query,
+
     }
     return render(request, "home.html", context)
 
@@ -58,3 +47,4 @@ def product_category(request, slug):
         'page_products':page_products
     }
     return render(request,"product_category.html", context)
+
