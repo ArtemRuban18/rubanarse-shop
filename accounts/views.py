@@ -1,15 +1,17 @@
 from django.shortcuts import render, redirect
 from .forms import SignUp, CustomPasswordChangeForm, CustomPasswordResetForm
 from django.contrib.auth.decorators import login_required
+from cart.tasks import create_cart
 
 def signup(request):
     if request.method == 'POST':
-        signup_form = SignUp(request.GET)
+        signup_form = SignUp(request.POST)
         if signup_form.is_valid():
-            signup_form.save()
-            return redirect(request, 'login', {'signup_form':signup_form})
-        else:
-            signup_form = SignUp()
+            user = signup_form.save()
+            create_cart.delay(user.id)
+            return redirect('login')
+    else:
+        signup_form = SignUp()
     return render(request, 'signup.html', {'signup_form':signup_form})
 
 @login_required

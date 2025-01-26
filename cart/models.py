@@ -15,7 +15,7 @@ class Cart(models.Model):
 class CartProduct(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='products',  verbose_name='Кошик')
     product = models.ForeignKey(Product, on_delete=models.CASCADE,  verbose_name='Назва товару')
-    quantity = models.PositiveIntegerField(blank=False,  verbose_name='Кількість')
+    quantity = models.PositiveIntegerField(blank=False,  verbose_name='Кількість', default = 1)
 
     def total_price(self):
         return self.product * self.quantity
