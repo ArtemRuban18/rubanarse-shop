@@ -45,7 +45,6 @@ def product_category(request, slug):
         'categories':categories,
         'products':products,
         'page_products':page_products,
-        'username': request.user.username if request.user.is_authenticated else None,
     }
     return render(request,"product_category.html", context)
 
