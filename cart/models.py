@@ -15,10 +15,24 @@ class Cart(models.Model):
 class CartProduct(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='products',  verbose_name='Кошик')
     product = models.ForeignKey(Product, on_delete=models.CASCADE,  verbose_name='Назва товару')
-    quantity = models.PositiveIntegerField(blank=False,  verbose_name='Кількість', default = 1)
+    quantity = models.PositiveIntegerField(blank=True,  verbose_name='Кількість', default = 1)
 
     def total_price(self):
-        return self.product * self.quantity
+        return self.product.price * self.quantity
     
     def __str__(self):
         return f"Додано {self.product} - {self.quantity}"
+
+class Like(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Користувач')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата створення')
+
+    def __str__(self):
+        return f"Вподобано {self.user}"
+
+class LikeProduct(models.Model):
+    like = models.ForeignKey(Like, on_delete=models.CASCADE, related_name='products',  verbose_name='Вподобане')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE,  verbose_name='Назва товару')
+    
+    def __str__(self):
+        return f"Додано {self.product}"

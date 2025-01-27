@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<h1>Кошик користувача {{ user.username }}</h1>
+{% if cart_products %}
+<ul>
+    {% for item in cart_products %}
+    <li>{{ item.product.name }} - {{ item.quantity }} шт. -{{ item.product.price }}</li>
+    <a href="{%url 'delete_product' item.product.id %}">delete</a>
+    {% endfor %}
+</ul>
+<p>Загальна кількість товарів: {{ cart_products|length }}</p>
+{% else %}
+<p>Ваш кошик порожній.</p>
+{% endif %}
+</body>
+</html>
