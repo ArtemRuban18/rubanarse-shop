@@ -9,8 +9,15 @@
 
 <body>
     <h1>Hello</h1>
+    {% for product in products %}
+        {{product.name}}
+        <a href="{% url 'add_to_cart' product.id %}">Додати до кошика</a>
+    {% endfor %}
     <a href="{% url 'password_change' %}">пароль</a>
     <a href="{% url 'signup' %}">signup</a>
-</body>
+    <a href="{% url 'login' %}">login</a>
 
+    <br>
+    <a href="{% url 'detail_cart' user.username %}">Кошик</a>
+</body>
 </html>
