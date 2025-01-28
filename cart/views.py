@@ -18,7 +18,7 @@ def add_to_cart(request, product_id):
 def detail_cart(request, username):
     user = get_object_or_404(User, username = username)
     if user != request.user:
-        return HttpResponseForbidden("Ви не маєте доступу до цього кошика.")
+        return HttpResponse("ERROR")
     cart, created = Cart.objects.get_or_create(user = user)
     cart_products = cart.products.all()
     context = {

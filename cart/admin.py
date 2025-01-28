@@ -12,7 +12,7 @@ class CartProductAdmin(admin.ModelAdmin):
     def total_price(self, obj):
         return obj.product.price * obj.quantity
     
-    total_price.short_description = "Загальна вартість"
+    total_price.short_description = "Загальна Сума"
 
 @admin.register(Like)
 class LikeAdmin(admin.ModelAdmin):
