@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Деталі замовлення #{{ order.order_id }}</title>
+</head>
+
+<body>
+    <h1>Деталі замовлення #{{ order.order_id }}</h1>
+    <p>Користувач: {{ order.user.username }}</p>
+    <p>Дата створення: {{ order.created_at }}</p>
+    <p>Спосіб оплати: {{ order.get_payment_method_display }}</p>
+    <h2>Товари</h2>
+    <h1>Редагування замовлення №{{ order.order_id }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ formset.management_form }} <!-- Обов'язковий елемент для керування formset -->
+        <table>
+            {% for form in formset %}
+            <tr>
+                <td>{{ form.instance.product.name }}</td> <!-- Назва продукту -->
+                <td>{{ form.quantity }}</td> <!-- Поле для редагування кількості -->
+            </tr>
+            {% endfor %}
+        </table>
+        <button type="submit">Зберегти зміни</button> <!-- Кнопка для відправки форми -->
+    </form>
+</body>
+
+</html>

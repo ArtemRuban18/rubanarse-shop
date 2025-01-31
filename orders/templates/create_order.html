@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Створити замовлення</title>
+</head>
+
+<body>
+    <h1>Створити замовлення</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ create_order_form.as_p }}
+        <button type="submit">Оформити замовлення</button>
+    </form>
+    <h2>Ваш кошик</h2>
+    <ul>
+        {% for item in cart.products.all %}
+        <li>{{ item.product.name }} - {{ item.quantity }} шт. за {{ item.product.price }}</li>
+        {% endfor %}
+    </ul>
+</body>
+
+</html>

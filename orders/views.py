@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect, get_object_or_404
 from .models import Order, OrderProduct
 from random import randint
 from cart.models import Cart
-from .forms import CreateOrderForm
+from .forms import CreateOrderForm, OrderProductFormSet
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.contrib.auth.models import User
@@ -23,7 +23,7 @@ def create_order(request):
                     product = cart_product.product,
                     quantity = cart_product.quantity
                 )
-            return redirect('order_detail', order_id = order.id)
+            return redirect('detail_order', order_id = order.id)
     else:
         create_order_form = CreateOrderForm()
     context = {
@@ -33,14 +33,22 @@ def create_order(request):
     return render(request, 'create_order.html', context)
         
 @login_required
-def order_detail(request, order_id, username):
-    user = get_object_or_404(User, username = username)
-    if user != request.user:
-        return HttpResponse("ERROR")
-    order = get_object_or_404(Order, id = order_id, user = request.user)
-    order_products = order.products.all()
+def detail_order(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    if request.method == 'POST':
+        formset = OrderProductFormSet(request.POST, instance=order)
+        if formset.is_valid():
+            formset.save()
+            return redirect('confirm_order', order_id=order.id)
+    else:
+        formset = OrderProductFormSet(instance=order)
+    
     context = {
-        'order':order,
-        'order_products':order_products
+        'order': order,
+        'formset': formset,
     }
-    return render(request, 'order_detail.html', context)
+    return render(request, 'detail_order.html', context)
+
+def confirm_order(request, order_id):
+    order = get_object_or_404(Order, id = order_id)
+    return render(request, 'confirm_order.html', {'order':order})
