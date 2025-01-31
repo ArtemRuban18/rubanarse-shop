@@ -3,7 +3,7 @@ from .models import Product, Category, ProductReview, TypeFlavor
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'description','category','get_flavor','volume', 'price', 'quantity', 'available', 'views']
+    list_display = ['id', 'name', 'description','category','get_flavor','volume', 'price', 'quantity', 'available', 'views', 'likes']
     search_fields = ['name', 'category', 'type_flavor', 'volume']
     list_filter = ['category', 'price', 'quantity','available', 'type_flavor']
 

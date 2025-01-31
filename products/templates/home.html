@@ -10,14 +10,27 @@
 <body>
     <h1>Hello</h1>
     {% for product in products %}
-        {{product.name}}
+        <a href="{% url 'detail_product' product.slug %}">{{product.name}}</a>
         <a href="{% url 'add_to_cart' product.id %}">Додати до кошика</a>
     {% endfor %}
-    <a href="{% url 'password_change' %}">пароль</a>
     <a href="{% url 'signup' %}">signup</a>
     <a href="{% url 'login' %}">login</a>
+    <a href="{% url 'create_order' %}">замовлення</a>
 
     <br>
     <a href="{% url 'detail_cart' user.username %}">Кошик</a>
+
+    <h1>Фільтр продуктів</h1>
+    <form method="get">
+        {{ filter.form.as_p }}
+        <button type="submit">Фільтрувати</button>
+    </form>
+    
+    <h2>Результати</h2>
+    <ul>
+        {% for product in filter.qs %}
+        <li>{{ product.name }} - {{ product.price }}</li>
+        {% endfor %}
+    </ul>
 </body>
 </html>

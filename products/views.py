@@ -3,12 +3,14 @@ from .models import Product, Category, ProductReview, TypeFlavor
 from django.core.paginator import Paginator
 from django.core.cache import cache
 from .forms import SearchForm
+from .filters import ProductFilter
 
 def home(request):
     products = cache.get('product_list')
     if not products:
         products = Product.objects.all()
-        cache.set('product_list', products, timeout = 60*20)
+        cache.set('product_list', products, timeout = 60*10)
+    filter = ProductFilter(request.GET, queryset=products)
     categories = Category.objects.all()
     paginator = Paginator(products, 25)
     page_number = request.GET.get('page')
@@ -17,12 +19,15 @@ def home(request):
         'products':products,
         'categories':categories,
         'page_products':page_products,
+        'filter':filter,
 
     }
     return render(request, "home.html", context)
 
 def detail_product(request, slug):
     product = get_object_or_404(Product, slug = slug)
+    product.views += 1
+    product.save()
     categories = Category.objects.all()
     context = {
         'product':product,

@@ -38,6 +38,7 @@ class Product(models.Model):
     slug = models.SlugField(max_length = 255, blank = False, unique= True)
     available = models.BooleanField(default=True, blank=False,  verbose_name='Доступно')
     views = models.PositiveIntegerField(default=0,  verbose_name='Кількість переглядів')
+    likes = models.PositiveIntegerField(default=0, verbose_name='Кількість вподобань')
 
     def save(self, *args, **kwargs):
         if not self.slug:
