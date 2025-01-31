@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import SignUp, CustomPasswordChangeForm, CustomPasswordResetForm
+from .forms import SignUp, CustomPasswordResetForm
 from django.contrib.auth.decorators import login_required
 
 def signup(request):
@@ -11,18 +11,6 @@ def signup(request):
     else:
         signup_form = SignUp()
     return render(request, 'signup.html', {'signup_form':signup_form})
-
-@login_required
-def password_change(request):
-    if request.method == 'POST':
-        password_change_form = CustomPasswordChangeForm(request.POST, user = request.user)
-        if password_change_form.is_valid():
-            password_change_form.save()
-            return redirect('password_change_done')
-    else:
-        password_change_form = CustomPasswordChangeForm(user = request.user)
-    return render(request, 'password_change.html', {'password_change_form':password_change_form})
-
 
 def password_reset(request):
     if request.method == 'POST':
