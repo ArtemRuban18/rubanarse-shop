@@ -61,7 +61,7 @@ class ProductReview(models.Model):
 
     user = models.ForeignKey(User, on_delete = models.CASCADE, verbose_name='Користувач')
     product = models.ForeignKey(Product, on_delete = models.CASCADE, related_name = 'product_reviews', verbose_name='Товар')
-    rating = models.PositiveIntegerField(choices = CHOICES_RATING, verbose_name='Оцінка')
+    rating = models.PositiveIntegerField(choices = CHOICES_RATING, verbose_name='Оцінка', blank=False)
     comment = models.TextField(blank = True, verbose_name='Коментар')
     created_at = models.DateTimeField(auto_now_add = True, verbose_name='Створено')
 
