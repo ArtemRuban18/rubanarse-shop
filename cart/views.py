@@ -47,7 +47,7 @@ def add_to_like(request, product_id):
     return HttpResponse(f"{product} added to like {request.user}")
 
 @login_required
-def detail_cart(request, username):
+def detail_like(request, username):
     user = get_object_or_404(User, username = username)
     if user != request.user:
         return HttpResponse("ERROR")
@@ -58,10 +58,10 @@ def detail_cart(request, username):
         'cart':cart,
         'user':user,
     }
-    return render(request, 'detail_cart.html', context)
+    return render(request, 'detail_like.html', context)
 
 @login_required
-def delete_from_cart(request, product_id):
+def delete_from_like(request, product_id):
     cart = get_object_or_404(Like, user=request.user)
     product = get_object_or_404(Product, id=product_id)
     cart_product = get_object_or_404(LikeProduct, cart=cart, product=product)
