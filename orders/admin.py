@@ -3,9 +3,9 @@ from .models import Order, OrderProduct
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['order_id','full_name','phone', 'email', 'created_at']
+    list_display = ['order_id','full_name','phone', 'email','status', 'created_at']
     ordering = ['created_at']
-    list_filter = ['order_id', 'email', 'full_name']
+    list_filter = ['order_id', 'email', 'full_name','status']
     search_fields = ['full_name', 'email', 'order_id']
 
 @admin.register(OrderProduct)
