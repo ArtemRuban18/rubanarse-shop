@@ -1,15 +1,28 @@
+
 from django.shortcuts import render,redirect, get_object_or_404
 from .models import Order, OrderProduct
 from random import randint
 from cart.models import Cart
 from .forms import CreateOrderForm, OrderProductFormSet
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
-from django.contrib.auth.models import User
+from django.contrib import messages
+from django.db import transaction
+from django.http import JsonResponse
 
 @login_required
 def create_order(request):
     cart = get_object_or_404(Cart, user = request.user)
+    products_cart = cart.products.all()
+    if not products_cart.exists():
+        messages.error(request, "Ваш кошик порожній. Додайте товари до кошика перед створенням замовлення.")
+        return redirect('detail_cart', username=request.user.username)
+    for product_cart in products_cart:
+        product = product_cart.product
+        if product.quantity < product_cart.quantity:
+            messages.error(request, f"""Недостатня кількість товару {product.name} на складі.
+                           Максимальна можлива кількість {product.quantity}""")
+            return redirect('detail_cart', username = request.user.username)
+
     if request.method == 'POST':
         create_order_form = CreateOrderForm(request.POST)
         if create_order_form.is_valid():
@@ -49,6 +62,27 @@ def detail_order(request, order_id):
     }
     return render(request, 'detail_order.html', context)
 
+
 def confirm_order(request, order_id):
-    order = get_object_or_404(Order, id = order_id)
-    return render(request, 'confirm_order.html', {'order':order})
+    with transaction.atomic():
+        order = get_object_or_404(Order.objects.select_for_update(), id=order_id, user=request.user)
+        cart = get_object_or_404(Cart, user=request.user)
+        if order.status == 'confirmed':
+            return redirect('confirm_order', order_id=order.id)
+        try:
+            order.confirm_order()
+            cart.products.all().delete()
+        except ValueError as e:
+            messages.error(request, str(e))
+
+    return render(request, 'confirm_order.html', {'order': order})
+
+def cancel_order(request, order_id):
+    order = get_object_or_404(Order, id = order_id, user = request.user)
+    try:
+        order.cancel_order()
+        order.delete()
+        messages.success('Замовлення успішно скасовано!')
+    except ValueError as e:
+        messages.error(request, str(e))
+    return redirect('detail_cart', order_id = order.id)
