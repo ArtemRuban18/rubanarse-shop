@@ -1,31 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Деталі замовлення #{{ order.order_id }}</title>
+    <title>Редагування замовлення #{{ order.id }}</title>
 </head>
 
 <body>
-    <h1>Деталі замовлення #{{ order.order_id }}</h1>
+    <h1>Редагування замовлення #{{ order.id }}</h1>
     <p>Користувач: {{ order.user.username }}</p>
     <p>Дата створення: {{ order.created_at }}</p>
-    <p>Спосіб оплати: {{ order.get_payment_method_display }}</p>
+    <p>Статус: {{ order.get_status_display }}</p>
+
     <h2>Товари</h2>
-    <h1>Редагування замовлення №{{ order.order_id }}</h1>
     <form method="post">
         {% csrf_token %}
-        {{ formset.management_form }} <!-- Обов'язковий елемент для керування formset -->
+        {{ formset.management_form }}
         <table>
-            {% for form in formset %}
-            <tr>
-                <td>{{ form.instance.product.name }}</td> <!-- Назва продукту -->
-                <td>{{ form.quantity }}</td> <!-- Поле для редагування кількості -->
-            </tr>
-            {% endfor %}
+            <thead>
+                <tr>
+                    <th>Товар</th>
+                    <th>Кількість</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for form in formset %}
+                <tr>
+                    <td>{{ form.instance.product.name }}</td>
+                    <td>{{ form.quantity }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
-        <button type="submit">Зберегти зміни</button> <!-- Кнопка для відправки форми -->
+        <button type="submit">Зберегти зміни</button>
     </form>
 </body>
 

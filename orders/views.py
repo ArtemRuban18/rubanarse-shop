@@ -51,7 +51,10 @@ def detail_order(request, order_id):
     if request.method == 'POST':
         formset = OrderProductFormSet(request.POST, instance=order)
         if formset.is_valid():
-            formset.save()
+            products_order = formset.save(commit=False)
+            for product_order in products_order:
+                product_order.quantity.save()
+                product_order.save()
             return redirect('confirm_order', order_id=order.id)
     else:
         formset = OrderProductFormSet(instance=order)
@@ -65,6 +68,7 @@ def detail_order(request, order_id):
 
 def confirm_order(request, order_id):
     with transaction.atomic():
+<<<<<<< HEAD
         order = get_object_or_404(Order.objects.select_for_update(), id=order_id, user=request.user)
         cart = get_object_or_404(Cart, user=request.user)
         if order.status == 'confirmed':
@@ -86,3 +90,20 @@ def cancel_order(request, order_id):
     except ValueError as e:
         messages.error(request, str(e))
     return redirect('detail_cart', order_id = order.id)
+=======
+        order = Order.objects.select_for_update().get(id = order_id)
+        cart = get_object_or_404(Cart, user = request.user)
+        if order.status == 'confirmed':
+            return JsonResponse({'message':"Замовлення вже підтверджено!"})
+        try:
+            order.confirm_order()
+            cart.products.all().delete()
+            order.save()
+            return JsonResponse({'message':'confirm'})
+        except ValueError as e:
+            return JsonResponse({'error':str(e)}, status = 400)
+    context = {
+        'order':order,
+    }
+    return render(request, 'confirm_order.html', context)
+>>>>>>> 2f86da1a4fb9b380c19b191a6c4c4cd4dd535fcc

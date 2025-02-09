@@ -1,11 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Підтвердження замовлення #{{ order.order_id }}</title>
 </head>
+
 <body>
-    
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
+    </ul>
+    {% endif %}
+    <h1>Підтвердження замовлення #{{ order.order_id }}</h1>
+    {% if order.status == 'confirmed' %}
+    <p>Ваше замовлення підтверджено!</p>
+    {% else %}
+    <p>Ваше замовлення ще не підтверджено.</p>
+    {% endif %}
+    <h2>Деталі замовлення</h2>
+    <ul>
+        {% for item in order.products.all %}
+        <li>{{ item.product.name }} - {{ item.quantity }} шт. за {{ item.product.price }}</li>
+        {% endfor %}
+    </ul>
 </body>
+
 </html>
