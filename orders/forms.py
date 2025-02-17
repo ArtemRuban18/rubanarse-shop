@@ -16,15 +16,4 @@ class CreateOrderForm(forms.ModelForm):
 class EditOrderProductForm(forms.ModelForm):
     class Meta:
         model = OrderProduct
-        fields = ['product', 'quantity']
-        widgets = {
-            'product': forms.TextInput(attrs={'readonly': 'readonly'})  
-        }
-
-OrderProductFormSet = inlineformset_factory(
-    Order, 
-    OrderProduct, 
-    form=EditOrderProductForm,  
-    fields=['product', 'quantity'],  
-    extra=0,  
-)
+        fields = ['quantity']
