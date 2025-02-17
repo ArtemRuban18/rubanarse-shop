@@ -8,8 +8,6 @@ urlpatterns = [
     path('signup/', signup, name='signup'),
     path('password-reset/',  auth_view.PasswordResetView.as_view(
         template_name = 'password_reset.html',
-        email_template_name='password_reset_email.html',
-        subject_template_name='password_reset_subject.txt',
         extra_email_context={
             'protocol': 'http',
             'domain': 'localhost:8000'
