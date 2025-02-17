@@ -8,19 +8,22 @@
     {% load static %}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
 </head>
 
 <body>
     <div class="auth-container">
         <div class="auth-form">
-            <h2>Login</h2>
+            <h2>Увійти</h2>
             <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button type="submit" class="btn-login">Login</button>
+                <button type="submit" class="btn-login">Увійти</button>
             </form>
             <p class="auth-link">
-                Ви не маєте аккаунту? <a href="{% url 'signup' %}">Зареєструватися</a>
+                <a href="{% url 'signup' %}">Зареєструватися</a>
+                <br>
+                <a href="{% url 'password_reset' %}">Забули пароль?</a>
             </p>
         </div>
     </div>
