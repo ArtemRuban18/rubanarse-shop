@@ -32,7 +32,6 @@ DEBUG = os.getenv("DEBUG", "False") == "False"
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -77,6 +76,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'products.context_processors.global_context'
             ],
         },
     },
@@ -129,13 +129,12 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
 LANGUAGE_CODE = 'uk-ua'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Kiev'
 
 USE_I18N = True
 
@@ -146,7 +145,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [ BASE_DIR / 'static',]
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -168,8 +171,7 @@ CACHES = {
     }
 }
 
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
@@ -179,3 +181,31 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
 DEFAULT_DOMAIN = 'localhost:8000'
 DEFAULT_PROTOCOL = 'http'
+
+LOGGING_DIR = BASE_DIR / 'logs'
+LOGGING_DIR.mkdir(exist_ok=True)
+LOGGING = {
+    'version':1,
+    'disable_existing_loggers':False,
+    'formatters': {
+        'verbose':{
+            'format': '%(levelname)s %(asctime)s %(message)s',
+            'style': '%',
+        },
+    },
+    'handlers':{
+        'file':{
+            'class':'logging.FileHandler',
+            'filename':LOGGING_DIR / 'logs.log',
+            'level':'INFO',
+            'formatter':'verbose',
+        }
+    },
+    'loggers':{
+        'django':{
+            'level':'INFO',
+            'handlers':['file'],
+            'propagate':False,
+        }
+    },
+}
