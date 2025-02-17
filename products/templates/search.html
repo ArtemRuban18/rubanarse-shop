@@ -1,17 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <ul>
-        {% for item in result %}
-        <li>{{ item.name }}</li>
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="filter">
+        <form method="get">
+            {{filter.form.as_p}}
+            <button type="submit">Застосувати</button>
+        </form>
+    </div>
+    <div class="products">
+        {% for product in page_products%}
+            <div class="product">
+                <a href="{% url 'detail_product' product.slug %}">
+                    <div>
+                        {{product.name}}
+                    </div>
+                </a>
+            </div>
         {% empty %}
-        <li>Нічого не знайдено</li>
+            <h2>Нажаль, нічого не знайдено!</h2>
         {% endfor %}
-    </ul>
-</body>
-</html>
+    </div>
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_products.has_previous %}
+            <a href="?page={{ page_products.previous_page_number }}">Попередня</a>
+            {% endif %}
+
+            <span>Сторінка {{ page_products.number }} з {{ page_products.paginator.num_pages }}</span>
+
+            {% if page_products.has_next %}
+            <a href="?page={{ page_products.next_page_number }}">Наступна</a>
+            {% endif %}
+        </span>
+    </div>
+{% endblock %}
