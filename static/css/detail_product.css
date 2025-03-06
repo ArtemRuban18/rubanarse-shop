@@ -1,0 +1,105 @@
+.detail{
+    width: 100%;
+    background-color: aliceblue;
+}
+.container-product {
+    display: flex;
+    width: 1300px;
+}
+
+.container-product img{
+    width: 400px;
+    height: 450px;
+    margin-left: 40px;
+    padding-right: 100px;
+    margin-top: 20px;
+}
+
+.product {
+    margin-top: 50px;
+    margin-bottom: 200px;
+}
+
+
+.container-review {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form h2 {
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.form form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form input,
+.form textarea,
+.form select {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.form button {
+    background: #00ADB5;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.form button:hover {
+    background: #046c72;
+}
+.review-list {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.review-list h2 {
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.review {
+    background: #f1f1f1;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.review strong {
+    color: #00ADB5;
+}
+
+.review p {
+    margin: 5px 0;
+    font-size: 16px;
+}
