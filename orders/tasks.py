@@ -1,10 +1,14 @@
-from celery import shared_task
 from django.core.mail import send_mail
-from django.conf import settings
+from celery import shared_task
 from .models import Order
+from django.conf import settings
 
 @shared_task
 def send_email_confirm_order(subject, message, racipient_list, order_id):
+    """
+    Task for send email to user after create and confirm order
+    """
+
     try:
         order = Order.objects.get(id = order_id)
         if order.status != 'cancelled':
