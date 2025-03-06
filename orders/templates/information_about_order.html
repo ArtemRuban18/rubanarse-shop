@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+    <div class="info-order">
+        <h2>Інформація про замовлення</h2>
+        <div class="info">
+            <p><strong>Дата: {{order.created_at}}</strong></p>
+            <p><strong>Статус замовлення: {{order.get_status_display}}</strong></p>
+            <p><strong>Ім'я замовника: {{order.full_name}}</strong></p>
+            <p><strong>Номер телефону: {{order.phone}}</strong></p>
+            <p><strong>Email: {{order.email}}</strong></p>
+            <p><strong>Загальна вартість замовлення: {{order.total_price}} ГРН</strong></p>
+        </div>
+        <div class="table-order">
+            <table>
+                <tr class="first-row">
+                    <th>Товар</th>
+                    <th>Ціна</th>
+                    <th>Кількість</th>
+                    <th>Вартість</th>
+                </tr>
+                {% for item in order.products.all %}
+                <tr class="product-row">
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.product.price }} ГРН</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.total_price }} ГРН</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    <a href="{% url 'detail_order' order_id=order.order_id %}" class="back-to-detail-order">Повернутись назад</a>
+    
+    {% if order.status == 'created' %}
+    <a href="{% url 'confirm_order' order_id=order.order_id %}" class="confirm">Підтвердити</a>
+    {% endif %}
+
+{% endblock %}

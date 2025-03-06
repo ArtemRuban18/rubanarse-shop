@@ -1,32 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Підтвердження замовлення #{{ order.order_id }}</title>
-</head>
-
-<body>
+{% block body %}
     {% if messages %}
     <ul>
-        {% for message in messages %}
         <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
-            {% endfor %}
     </ul>
     {% endif %}
-    <h1>Підтвердження замовлення #{{ order.order_id }}</h1>
-    {% if order.status == 'confirmed' %}
-    <p>Ваше замовлення підтверджено!</p>
-    {% else %}
-    <p>Ваше замовлення ще не підтверджено.</p>
-    {% endif %}
-    <h2>Деталі замовлення</h2>
-    <ul>
-        {% for item in order.products.all %}
-        <li>{{ item.product.name }} - {{ item.quantity }} шт. за {{ item.product.price }}</li>
-        {% endfor %}
-    </ul>
-</body>
-
-</html>
+    <div class="info-order">
+        <h2>Ваше замовлення підтверджено.</h2>
+        <div class="table-order">
+            <table>
+                <tr class="first-row">
+                    <th>Товар</th>
+                    <th>Ціна</th>
+                    <th>Кількість</th>
+                    <th>Вартість</th>
+                </tr>
+                {% for item in order.products.all %}
+                <tr class="product-row">
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.product.price }} ГРН</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.total_price }} ГРН</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    <a href="{% url 'home'%}" class="back-to-cart">На головну</a>
+{% endblock %}

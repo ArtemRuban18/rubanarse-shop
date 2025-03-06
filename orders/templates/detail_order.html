@@ -1,40 +1,39 @@
-<!DOCTYPE html>
-<html lang="uk">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Редагування замовлення #{{ order.id }}</title>
-</head>
+{% block body %}
+<h2>Деталі замовлення</h2>
 
-<body>
-    <h1>Редагування замовлення #{{ order.id }}</h1>
-    <p>Користувач: {{ order.user.username }}</p>
-    <p>Дата створення: {{ order.created_at }}</p>
-    <p>Статус: {{ order.get_status_display }}</p>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li class="{{ message.tags }}">{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
 
-    <h2>Товари</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ formset.management_form }}
-        <table>
-            <thead>
-                <tr>
-                    <th>Товар</th>
-                    <th>Кількість</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for form in formset %}
-                <tr>
-                    <td>{{ form.instance.product.name }}</td>
-                    <td>{{ form.quantity }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <button type="submit">Зберегти зміни</button>
-    </form>
-</body>
+{% if order.status == 'confirmed' %}
 
-</html>
+<p>Замовлення вже підтверджено і не може бути змінено.</p>
+{% elif order.status == 'created' %}
+<div class="container">
+    <div class="form">
+        <form method="post">
+            {% csrf_token %}
+            <h3>Редагування товарів</h3>
+            {{ formset.management_form }}
+            {% for form in formset %}
+            <div class="order-product-form">
+                <p><strong>Товар:</strong> <span class="product-name">{{ form.instance.product.name|truncatechars:30 }}</span></p>
+                {{ form.as_p }}
+            </div>
+            {% endfor %}
+            <button type="submit">Оновити замовлення</button>
+        </form>
+    </div>
+</div>
+{% else %} {# Для інших статусів, якщо вони є #}
+<p>Статус замовлення: {{ order.status }}</p>
+{% endif %}
+
+<a href="{% url 'create_order' %}" class="back-to-cart">Назад</a>
+{% endblock %}
