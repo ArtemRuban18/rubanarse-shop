@@ -1,5 +1,57 @@
 {% extends 'base.html' %}
 
 {% block body %}
+<div class="detail">
+    <div class="container-product">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+            <div class="product">
+                <p><strong>Товар:</strong> {{ product.name }}</p>
+                <p><strong>Опис:</strong> {{ product.description }}</p>
+                <p><strong>Ціна:</strong> {{ product.price }} грн.</p>
+                <p><strong>Об'єм:</strong> {{ product.volume }} мл.</p>
+                <p><strong>Категорія:</strong> {{ product.category.name }}</p>
+                <p><strong>Аромат:</strong>
+                    {% for flavor in product.type_flavor.all %}
+                    {{ flavor.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+                {% if product.id in cart_products %}
+                <a href="{% url 'delete_product' product.id %}?next={{ request.path }}" class="btn btn-danger">
+                    Видалити з кошика
+                </a>
+                {% else %}
+                <a href="{% url 'add_to_cart' product.id %}?next={{ request.path }}" class="btn btn-primary">
+                    Додати до кошика
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="container-review">
+            <div class="form">
+                <h2>Залишити відгук</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ review_form.as_p }} 
+                    <button type="submit">Зберегти відгук</button>
+                </form>
+            </div>
+            
+            <div class="review-list">
+                <h2>Відгуки</h2>
+                {% if product_reviews %}
+                {% for review in product_reviews %}
+                <div class="review">
+                    <p><strong>{{ forloop.counter }}. {{ review.user.username }}</strong>: {{ review.text }}</p>
+                    <p>Оцінка: {{ review.rating }}</p>
+                    <p>Коментар: {{review.comment}}</p>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p>Ще немає відгуків.</p>
+                {% endif %}
+            </div>
+        </div>
+</div>
+       
 
 {% endblock %}

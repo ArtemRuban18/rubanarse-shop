@@ -1,32 +1,51 @@
 {% extends 'base.html' %}
 
 {% block body %}
+<div class="content-container">
+    <section class="products-section">
+        {% for product in page_products %}
+        {% if product.available %}
+        <div class="detail_product">
+            <a href="{% url 'detail_product' product.slug %}">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid">
+                <h6 id="name-product">{{ product.name|truncatechars:30|safe }}</h6>
+                <h6>{{ product.price }} ГРН</h6>
+            </a>
+            {% if product.id in cart_products %}
+            <a href="{% url 'delete_product' product.id %}?next={{ request.path }}" class="btn btn-danger">
+                Видалити з кошика
+            </a>
+            {% else %}
+            <a href="{% url 'add_to_cart' product.id %}?next={{ request.path }}" class="btn btn-primary">
+                Додати до кошика
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+        {% endfor %}
+
+        <!-- Пагінація під продуктами -->
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_products.has_previous %}
+                <a href="?page={{ page_products.previous_page_number }}">Попередня</a>
+                {% endif %}
+                <span>Сторінка {{ page_products.number }} з {{ page_products.paginator.num_pages }}</span>
+                {% if page_products.has_next %}
+                <a href="?page={{ page_products.next_page_number }}">Наступна</a>
+                {% endif %}
+            </span>
+        </div>
+    </section>
+</div>
+
+<aside class="filters-container">
     <div class="filter">
         <form method="get">
-            {{filter.form.as_p}}
-            <button type="submit">Застосувати</button>
+            {{ filter.form.as_p }}
+            <button type="submit" class="btn btn-dark">Застосувати</button>
         </form>
     </div>
-    <div class="products">
-        {% for product in page_products%}
-        <a href="{% url 'detail_product' product.slug %}">
-            <div class="detail_product">
-                {{product.name}}
-            </div>
-        </a>
-        {% endfor %}
-    </div>
-    <div class="pagination">
-        <span class="step-links">
-            {% if page_products.has_previous %}
-            <a href="?page={{ page_products.previous_page_number }}">Попередня</a>
-            {% endif %}
-    
-            <span>Сторінка {{ page_products.number }} з {{ page_products.paginator.num_pages }}</span>
-    
-            {% if page_products.has_next %}
-            <a href="?page={{ page_products.next_page_number }}">Наступна</a>
-            {% endif %}
-        </span>
-    </div>
+</aside>
+
 {% endblock %}
