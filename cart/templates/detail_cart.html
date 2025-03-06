@@ -1,22 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-<h1>Кошик користувача {{ user.username }}</h1>
-{% if cart_products %}
-<ul>
-    {% for item in cart_products %}
-    <li>{{ item.product.name }} - {{ item.quantity }} шт. -{{ item.product.price }}</li>
-    <a href="{%url 'delete_product' item.product.id %}">delete</a>
-    {% endfor %}
-</ul>
-<p>Загальна кількість товарів: {{ cart_products|length }}</p>
-{% else %}
-<p>Ваш кошик порожній.</p>
-{% endif %}
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="content-container">
+    <section class="cart-section">
+        {% if cart_products %}
+        <h2>Ваш кошик</h2>
+        <div class="products-section">
+            {% for item in cart_products %}
+            <div class="detail_product">
+                <a href="{% url 'detail_product' item.product.slug %}">
+                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="img-fluid">
+                    <h6 id="name-product">{{ item.product.name|truncatechars:30|safe }}</h6>
+                    <h6>{{ item.product.price }} ГРН</h6>
+                    <p>Кількість: {{ item.quantity }} шт.</p>
+                </a>
+                <a href="{% url 'delete_product' item.product.id %}?next={{ request.path }}" class="btn btn-danger">Видалити</a>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="total-price">
+            <p>Загальна сума: {{ total_price }} ГРН</p>
+            <a href="{% url 'create_order' %}" class="btn btn-success">Замовити</a>
+        </div>
+        {% else %}
+            <h2>{{ user.username }}, Ваш кошик порожній!</h2>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}
