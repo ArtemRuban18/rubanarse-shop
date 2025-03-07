@@ -43,31 +43,46 @@ Ensure that you have the following installed on your system
 ## Installation
 
 Clone the repository:
-   > git clone https://github.com/ArtemRuban18/rubanarse-shop
-
+```
+git clone https://github.com/ArtemRuban18/rubanarse-shop
+cd rubanarse-shop
+```
 Create a .env file and configure environment variables
 
-> cd rubanarse-shop
 Build and run the containers:
-   > docker-compose up --build
+```
+docker-compose up --build
+```
 
 Create new database migrations:
-   > docker-compose run django python manage.py makemigrations
+```
+docker-compose run django python manage.py makemigrations
+```
 
 Run database migrations:
-   > docker-compose run django python manage.py migrate
+```
+docker-compose run django python manage.py migrate
+```
 
 Now you can run the server:
-   > docker-compose run django python manage.py runserver
+```
+docker-compose run django python manage.py runserver
+```
 
-Create superuser:
-   > docker-compose run django python manage.py createsuperuser
+To access the Django admin panel, you need to create a superuser:
+```
+docker-compose run django python manage.py createsuperuser
+```
 
 ## Asynchronous Task
 
 This project uses Celery for background tasks processing, powered by Redis as message broker
 To start Celery, run
-   > celery -A shop worker --loglevel=info
+```
+celery -A shop worker --loglevel=info
+```
 
-Check Redis connection:
-   > docker-compose exec redis redis-cli
+Make sure the Redis server is running:
+```
+docker-compose exec redis redis-cli
+```
