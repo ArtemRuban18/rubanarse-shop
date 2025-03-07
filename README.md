@@ -1,7 +1,7 @@
 # Perfume shop
 
 
-Perfume shop is an online store created on Django and launched in conteiners using Docker
+Perfume shop is an online store created on Django + PostgreSQL and launched in conteiners using Docker
 
 
 
